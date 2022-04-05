@@ -1,0 +1,42 @@
+{
+  "name": "echart-render-service",
+  "version": "0.0.1",
+  "description": "Render Server for echarts, designed for backend applications",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "debugstart": "node --trace_gc --trace-deprecation --trace-warnings --trace-uncaught --track-heap-objects dist/index.js",
+    "checkcodestyle": "npx eslint ./**",
+    "autofixcodestyle": "npx eslint ./** --fix",
+    "build": "ncc build -m -d -e puppeteer src/Application.ts -o dist",
+    "watch": "ncc build -w -d -e puppeteer src/Application.ts -o dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliteSchwein/echart-render-service.git"
+  },
+  "author": "eliteSCHW31N",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliteSchwein/echart-render-service/issues"
+  },
+  "homepage": "https://github.com/eliteSchwein/echart-render-service#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.10",
+    "@vercel/ncc": "^0.33.1",
+    "async-wait-until": "2.0.12",
+    "bytes": "^3.1.1",
+    "eslint": "^8.12.0",
+    "eslint-config-galex": "^3.6.2",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "express": "^4.17.3",
+    "form-data": "^4.0.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "puppeteer": "^13.5.2"
+  }
+}
