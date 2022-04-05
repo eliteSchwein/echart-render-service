@@ -6,7 +6,11 @@ export class BrowserClient {
     protected page: Page
 
     public async initBrowser() {
-        this.browser = await Puppeteer.launch({defaultViewport: null})
+        this.browser = await Puppeteer.launch({
+            defaultViewport: null,
+            args: ['--no-sandbox', '--incognito'],
+            headless: true
+        })
         this.page = await this.browser.newPage()
     }
 
