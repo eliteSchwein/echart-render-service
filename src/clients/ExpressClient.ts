@@ -82,7 +82,11 @@ export class ExpressClient {
                 });
                 res.end(screenShot)
 
-                delete this.requestPipeline[requestId]
+                const index = this.requestPipeline.indexOf(requestId);
+
+                if (index > -1) {
+                    this.requestPipeline.splice(index, 1);
+                }
             } catch (e){
                 console.log(e)
                 const index = this.requestPipeline.indexOf(requestId);
