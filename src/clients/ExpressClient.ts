@@ -48,16 +48,13 @@ export class ExpressClient {
                 return
             }
 
-            const data = [body]
-            const validation = _.filter(data, _.matches(requiredData))
-
-            if(validation.length === 0) {
+            if(typeof body.resolution === 'undefined' || typeof body.chart_options === 'undefined') {
                 res.status(400).send('{"error": "json object invalid"}')
                 return
             }
 
-            const resolution = data[0]['resolution']
-            const chartOptions = data[0]['chart_options']
+            const resolution = body.resolution
+            const chartOptions = body.chart_options
 
             chartOptions['animation'] = false
 
