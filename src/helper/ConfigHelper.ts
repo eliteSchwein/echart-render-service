@@ -4,7 +4,11 @@ export class ConfigHelper {
     protected config = {}
 
     public constructor() {
-        this.config = readFileSync('../config.json').toJSON()
+        this.config = JSON.parse(readFileSync(`${__dirname}/../config.json`).toString())
+    }
+
+    public getAddress() {
+        return this.config['address']
     }
 
     public getPort() {
@@ -12,6 +16,14 @@ export class ConfigHelper {
     }
 
     public getUploadLimit() {
-        return this.config['upload_limit'] * 1000
+        return this.config['upload_limit']
+    }
+
+    public getTimeout() {
+        return this.config['timeout'] * 1000
+    }
+
+    public getScreenshotDelay() {
+        return this.config['screenshot_delay']
     }
 }

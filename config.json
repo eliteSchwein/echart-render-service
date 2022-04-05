@@ -1,4 +1,7 @@
 {
+  "address": "localhost",
   "port": 8090,
-  "upload_limit": 10
+  "upload_limit": "10mb",
+  "timeout": 10,
+  "screenshot_delay": 250
 }

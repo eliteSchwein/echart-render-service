@@ -1,11 +1,14 @@
 import {BrowserClient} from "./clients/BrowserClient";
-import {ConfigHelper} from "./helper/ConfigHelper";
+import {ExpressClient} from "./clients/ExpressClient";
 
-const helper = new ConfigHelper()
-const browser = new BrowserClient()
+const browserClient = new BrowserClient()
+const expressClient = new ExpressClient()
 
 async function init() {
-
+    await browserClient.initBrowser()
+    expressClient.initExpress()
 }
+
+export const getBrowserClient = () => browserClient;
 
 void init()
