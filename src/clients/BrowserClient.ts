@@ -10,6 +10,11 @@ export class BrowserClient {
         this.page = await this.browser.newPage()
     }
 
+    public async newPage() {
+        await this.page.close()
+        this.page = await this.browser.newPage()
+    }
+
     public async setResolution(width: number, height: number) {
         await this.page.setViewport({
             width,
@@ -24,7 +29,7 @@ export class BrowserClient {
     public async screenshotPage(delay: number) {
         await this.sleep(delay)
         
-        return this.page.screenshot()
+        return await this.page.screenshot()
     }
 
     public async closeBrowser() {

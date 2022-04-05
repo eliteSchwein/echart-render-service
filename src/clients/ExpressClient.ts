@@ -65,6 +65,8 @@ export class ExpressClient {
             try {
                 await waitUntil(() => this.requestPipeline[0] === requestId, {timeout: this.configHelper.getTimeout()})
 
+                await this.browserClient.newPage()
+
                 await this.browserClient.setResolution(resolution.width, resolution.height)
 
                 let template = readFileSync(`${__dirname}/../src/meta/chartTemplate.html`, 'utf8').toString()
