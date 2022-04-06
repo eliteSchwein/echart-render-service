@@ -26,4 +26,8 @@ export class ConfigHelper {
     public getScreenshotDelay() {
         return this.config['screenshot_delay']
     }
+
+    public getExecutablePath() {
+        return this.config['executable_path']
+    }
 }
