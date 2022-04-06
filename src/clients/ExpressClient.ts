@@ -3,7 +3,7 @@ import * as bodyParser from "body-parser";
 import {ConfigHelper} from "../helper/ConfigHelper";
 import * as App from "../Application";
 import {BrowserClient} from "./BrowserClient";
-import {readFileSync} from "fs";
+import {readdirSync, readFileSync} from "fs";
 
 export class ExpressClient {
     protected configHelper = new ConfigHelper()
@@ -28,6 +28,19 @@ export class ExpressClient {
 
         this.app.use(bodyParser.json({limit}))
         this.app.use(bodyParser.urlencoded({extended: true, limit}))
+
+        this.app.get('/', (req, res) => {
+            const examples = readdirSync(`${__dirname}/../src/meta/examples`)
+            let template = readFileSync(`${__dirname}/../src/meta/exampleTemplate.html`, 'utf8').toString()
+
+            const exampleName = examples[Math.floor(Math.random() * examples.length)]
+            const example = readFileSync(`${__dirname}/../src/meta/examples/${exampleName}`).toString()
+
+            template = template
+                .replace(/(\${echartOptions})/g, example)
+
+            res.send(template)
+        })
 
         this.app.post('/', async (req, res) => {
             const headers = req.headers
