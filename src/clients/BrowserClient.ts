@@ -10,7 +10,7 @@ export class BrowserClient {
         this.browser = await Puppeteer.launch({
             executablePath: this.configHelper.getExecutablePath(),
             defaultViewport: null,
-            args: ['--no-sandbox', '--incognito', '--use-gl'],
+            args: ['--no-sandbox', '--incognito', '--use-gl=swiftshader'],
             headless: true
         })
     }
