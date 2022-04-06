@@ -1,15 +1,12 @@
 import * as express from 'express'
 import * as bodyParser from "body-parser";
 import {ConfigHelper} from "../helper/ConfigHelper";
-import _ from "lodash";
-import waitUntil from "async-wait-until";
 import * as App from "../Application";
 import {BrowserClient} from "./BrowserClient";
 import {readFileSync} from "fs";
 
 export class ExpressClient {
     protected configHelper = new ConfigHelper()
-    protected requestPipeline = []
     protected browserClient: BrowserClient
     protected app: express
 
@@ -53,30 +50,25 @@ export class ExpressClient {
                 return
             }
 
+            const page = await this.browserClient.addPage()
             const resolution = body.resolution
             const chartOptions = body.chart_options
 
             chartOptions['animation'] = false
 
-            const requestId = Math.floor(Math.random() * 1_000_000)
-
-            this.requestPipeline.push(requestId)
+            await page.setViewport({width: resolution.width, height: resolution.height})
 
             try {
-                await waitUntil(() => this.requestPipeline[0] === requestId, {timeout: this.configHelper.getTimeout()})
-
-                await this.browserClient.newPage()
-
-                await this.browserClient.setResolution(resolution.width, resolution.height)
-
                 let template = readFileSync(`${__dirname}/../src/meta/chartTemplate.html`, 'utf8').toString()
 
                 template = template
                     .replace(/(\${echartOptions})/g, JSON.stringify(chartOptions))
 
-                await this.browserClient.setContent(template)
+                await page.setContent(template)
 
-                const screenShot = await this.browserClient.screenshotPage(this.configHelper.getScreenshotDelay())
+                await this.sleep(this.configHelper.getScreenshotDelay())
+
+                const screenShot = await page.screenshot()
 
                 res.writeHead(200, {
                     'Content-Type': 'image/png',
@@ -84,26 +76,22 @@ export class ExpressClient {
                 });
                 res.end(screenShot)
 
-                const index = this.requestPipeline.indexOf(requestId);
-
-                if (index > -1) {
-                    this.requestPipeline.splice(index, 1);
-                }
+                await page.close()
             } catch (e){
                 console.log(e)
-                const index = this.requestPipeline.indexOf(requestId);
 
-                if (index > -1) {
-                    this.requestPipeline.splice(index, 1);
-                }
+                await page.close()
 
-                delete this.requestPipeline[requestId]
-                res.status(400).send('{"error": "timeout"}')
+                res.status(400).send('{"error": "unknown error"}')
             }
         })
 
         this.app.listen(port, address, () => {
             console.log(`Listening on ${address}:${port}`)
         })
+    }
+
+    private async sleep(delay) {
+        return await new Promise((r) => setTimeout(r, delay))
     }
 }
